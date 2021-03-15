@@ -10,59 +10,37 @@ $( ".add-to-cart-button" ).click(function() {
 	updateBasketBar();
 });
 
-//------------------------------------------------------------------------------
-//change an existing key=>value in the HTML5 storage
-function ModifyItem(element) {
-	//check if name1 is already exists
-	var row = element.parentElement.parentNode;
-	//check if key exists
-			if (localStorage.getItem(row.id) !=null)
-			{
-			  //update
-				var productName = row.firstElementChild.lastChild.innerHTML;
-				var productQuantity = row.firstElementChild.nextElementSibling.lastElementChild.value;
-				var product = { name: productName, quantity: productQuantity };
-				var data1 = JSON.stringify(product);
-				localStorage.setItem(row.id,data1);
-			}
-
-
-	doShowAll();
-}
-//-------------------------------------------------------------------------
-//delete an existing key=>value from the HTML5 storage
-function RemoveItem(element) {
-	var name = element.parentElement.parentNode.id;
-	localStorage.removeItem(name);
-	updateBasketBar();
-}
-//-------------------------------------------------------------------------------------
-//restart the local storage
-function ClearAll() {
-	localStorage.clear();
-	updateBasketBar();
-}
-//--------------------------------------------------------------------------------------
-// dynamically populate the table with shopping list items
-//below step can be done via PHP and AJAX too.
 function updateBasketBar() {
 	if (CheckBrowser()) {
-		var key = "";
-		var list = "<tr><th>Item</th><th>Value</th></tr>\n";
 		var i = 0;
+		var totalPrice = 0;
 		if (localStorage.length < 1) {
-			$("#basket-bar").append(
-				"<div id=\"empty-cart-bar\" class=\"text-center g-pt-40\">\n" +
-				"    <span class=\"d-block g-color-gray-light-v1 g-font-size-30\">\n" +
-				"        <i class=\"icon-hotel-restaurant-105 u-line-icon-pro\"></i>\n" +
-				"    </span>\n" +
-				"    <span class=\"d-block g-color-text g-font-size-15\">Your cart is currently empty</span>\n" +
-				"</div>"
+			$('#basket-items-container').remove();
+			$("#basket-totals-container").before(
+				$('<div>', {
+					id: 'empty-cart-bar',
+					class: 'text-center g-pt-40'
+				}).append(
+					$('<span>', {
+						class: 'd-block g-color-gray-light-v1 g-font-size-30'
+					}).append(
+						$('<i>', {
+							class: 'icon-hotel-restaurant-105 u-line-icon-pro'
+						})
+					)
+				).append(
+					$('<span>', {
+						class: 'd-block g-color-text g-font-size-15',
+						text: 'Your cart is currently empty'
+					})
+				)
 			);
 		} else {
-			$("#basket-bar").append(
+			$('#empty-cart-bar').remove();
+			$('#basket-items-container').remove();
+			$("#basket-totals-container").before(
 				$('<div>', {
-					id: 'basket-items-contianer',
+					id: 'basket-items-container',
 					class: 'js-scrollbar g-height-200'
 				})
 			);
@@ -70,7 +48,8 @@ function updateBasketBar() {
 			for (i = 0; i <= localStorage.length-1; i++) {
 				key = localStorage.key(i);
 				product = JSON.parse(localStorage.getItem(key));
-				$("#basket-items-contianer").append(
+				totalPrice = totalPrice + (product.quantity * product.price);
+				$("#basket-items-container").append(
 					$('<div>', {
 						class: 'u-basket__product g-brd-none g-px-20'
 					}).append(
@@ -82,7 +61,7 @@ function updateBasketBar() {
 							}).append(
 								$('<img>', {
 									class: 'img-fluid',
-									src: src="assets/products/150x150/"+ product.slug + ".jpg",
+									src: src="assets/img/products/150x150/"+ product.slug + ".jpg",
 									alt: product.name
 								})
 							),
@@ -95,14 +74,17 @@ function updateBasketBar() {
 								}),
 								$('<span>', {
 									class: 'g-color-primary g-font-size-12',
-									text: product.quantity + 'x' + product.price + ' €'
+									text: product.quantity + ' x ' + product.price + ' €'
 								})
 							),
 							$('<button>', {
 								type: 'button',
 								class: 'u-basket__product-remove',
 								text: 'X',
-								itemkey: product.slug
+								'data-slug': product.slug
+							}).on('click', function(event) {
+								localStorage.removeItem($(this).data().slug);
+								updateBasketBar();
 							})
 						)
 					)
@@ -111,20 +93,13 @@ function updateBasketBar() {
 
 
 		}
-		//bind the data to html table
-		//you can use jQuery too....
-		//document.getElementById('list').innerHTML = list;
 		document.getElementById('basket-bar-number').innerHTML = localStorage.length;
+		document.getElementById('basket-total').innerHTML = totalPrice + ' €';
 	} else {
 		alert('Cannot save shopping list as your browser does not support HTML 5');
 	}
 }
 
-/*
- =====> Checking the browser support
- //this step may not be required as most of modern browsers do support HTML5
- */
- //below function may be redundant
 function CheckBrowser() {
 	if ('localStorage' in window && window['localStorage'] !== null) {
 		// we can use localStorage object to store data
@@ -133,7 +108,3 @@ function CheckBrowser() {
 		return false;
 	}
 }
-//-------------------------------------------------
-/*
-You can extend this script by inserting data to database or adding payment processing API to shopping cart..
-*/
