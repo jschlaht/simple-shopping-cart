@@ -135,36 +135,6 @@
                     <div class="g-brd-bottom g-brd-gray-light-v4 g-pa-15 g-mb-10">
                       <span class="d-block h6 text-center text-uppercase mb-0">Shopping Cart</span>
                     </div>
-                    <div class="js-scrollbar g-height-200">
-                      <!-- Empty cart -->
-                      <div id="empty-cart-bar" class="text-center g-pt-40">
-                        <span class="d-block g-color-gray-light-v1 g-font-size-30">
-                          <i class="icon-hotel-restaurant-105 u-line-icon-pro"></i>
-                        </span>
-                        <span class="d-block g-color-text g-font-size-15">Your cart is currently empty</span>
-                      </div>
-                      <!-- End Empty cart -->
-
-                      <!-- Product -->
-                      <div class="u-basket__product g-brd-none g-px-20">
-                        <div class="row no-gutters g-pb-5">
-                          <div class="col-4 pr-3">
-                            <a class="u-basket__product-img" href="#">
-                              <img class="img-fluid" src="assets/img-temp/150x150/img1.jpg" alt="Image Description">
-                            </a>
-                          </div>
-
-                          <div class="col-8">
-                            <h6 class="g-font-weight-400 g-font-size-default">
-                              <a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="#">Black Glasses</a>
-                            </h6>
-                            <small class="g-color-primary g-font-size-12">1 x $22.00</small>
-                          </div>
-                        </div>
-                        <button type="button" class="u-basket__product-remove">&times;</button>
-                      </div>
-                      <!-- End Product -->
-                    </div>
 
                     <div class="clearfix g-px-15">
                       <div class="row align-items-center text-center g-brd-y g-brd-gray-light-v4 g-font-size-default">
@@ -172,18 +142,12 @@
                           <strong class="d-block g-py-10 text-uppercase g-color-main g-font-weight-500 g-py-10">Total</strong>
                         </div>
                         <div class="col">
-                          <strong class="d-block g-py-10 g-color-main g-font-weight-500 g-py-10">$433.00</strong>
+                          <strong class="d-block g-py-10 g-color-main g-font-weight-500 g-py-10">0,00 &euro</strong>
                         </div>
                       </div>
                     </div>
 
                     <div class="g-pa-20">
-                      <div class="text-center g-mb-15">
-                        <a class="text-uppercase g-color-primary g-color-main--hover g-font-weight-400 g-font-size-13 g-text-underline--none--hover" href="page-cart.html">
-                          View Cart
-                          <i class="ml-2 icon-finance-100 u-line-icon-pro"></i>
-                        </a>
-                      </div>
                       <a class="btn btn-block u-btn-black g-brd-primary--hover g-bg-primary--hover g-font-size-12 text-uppercase rounded g-py-10" href="page-cart.html">Proceed to Checkout</a>
                     </div>
                   </div>
@@ -236,7 +200,7 @@
                   </a>
                 </h4>
                 <a class="d-inline-block g-color-gray-dark-v5 g-font-size-13" href="#">Woman</a>
-                <span class="d-block g-color-black g-font-size-17">$34.00</span>
+                <span class="d-block g-color-black g-font-size-17">34,00 &euro;</span>
               </div>
               <!-- End Product Info -->
 
@@ -253,9 +217,12 @@
                   </div>
                 </li>
                 <li class="list-inline-item align-middle mx-0">
-                  <a class="u-icon-v1 u-icon-size--sm g-color-gray-dark-v5 g-color-primary--hover g-font-size-15 rounded-circle" href="#"
+                  <a class="add-to-cart-button u-icon-v1 u-icon-size--sm g-color-gray-dark-v5 g-color-primary--hover g-font-size-15 rounded-circle" href="#"
                      data-toggle="tooltip"
                      data-placement="top"
+                     data-price="34"
+                     data-name="Malblock A3"
+                     data-slug="malblock-a3"
                      title="Add to Cart">
                     <i class="icon-finance-100 u-line-icon-pro"></i>
                   </a>
@@ -412,11 +379,12 @@
     <script src="assets/js/hs.core.js"></script>
     <script src="assets/js/components/hs.header.js"></script>
     <script src="assets/js/helpers/hs.hamburgers.js"></script>
-    <script src="assets/js/components/hs.dropdown.js"></script>
     <script src="assets/js/components/hs.scrollbar.js"></script>
+    <script src="assets/js/components/hs.dropdown.js"></script>
     <script src="assets/js/helpers/hs.rating.js"></script>
     <script src="assets/js/components/hs.slider.js"></script>
     <script src="assets/js/components/hs.go-to.js"></script>
+    <script src="assets/js/components/hs.count-qty.js"></script>
 
     <!-- JS Customization -->
     <script src="assets/js/custom.js"></script>
@@ -438,7 +406,6 @@
         // initialization of HSDropdown component
         $.HSCore.components.HSDropdown.init($('[data-dropdown-target]'), {
           afterOpen: function () {
-            $(this).find('input[type="search"]').focus();
           }
         });
 
@@ -450,6 +417,9 @@
 
         // initialization of rating
         $.HSCore.helpers.HSRating.init();
+
+        // initialization of quantity counter
+        $.HSCore.components.HSCountQty.init('.js-quantity');
 
         // initialization of range slider
         $.HSCore.components.HSSlider.init('#rangeSlider1');
